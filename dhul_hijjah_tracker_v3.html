@@ -1,0 +1,363 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.app{width:100%;font-family:var(--font-sans);padding:0 0 2rem;}
+.hdr{text-align:center;padding:1.5rem 0 1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem;}
+.hdr h1{font-size:21px;font-weight:500;color:var(--color-text-primary);}
+.hdr p{font-size:13px;color:var(--color-text-secondary);margin-top:4px;}
+.day-nav{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin-bottom:1.25rem;}
+.db{padding:10px 2px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:8px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;width:100%;}
+.db:hover{background:var(--color-background-secondary);}
+.db.active{border:1.5px solid #7F77DD;background:#EEEDFE;color:#3C3489;}
+.db .dn{font-size:17px;font-weight:500;display:block;color:inherit;}
+.db .dl{font-size:10px;display:block;margin-top:1px;opacity:0.85;}
+.db .dd{font-size:10px;display:block;color:var(--color-text-secondary);}
+.db.active .dd{color:#534AB7;}
+.db.arafah{border-color:#1D9E75;}
+.db.arafah.active{background:#E1F5EE;color:#085041;border-color:#1D9E75;}
+.db.arafah.active .dd{color:#0F6E56;}
+
+.banner{border-radius:8px;padding:11px 15px;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:11px;}
+.bfast{background:#E1F5EE;border:0.5px solid #5DCAA5;}
+.bfast i,.barafah i{color:#0F6E56;}
+.bfast p,.barafah p{color:#085041;}
+.bnofast{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);}
+.bnofast i{color:var(--color-text-secondary);}
+.bnofast p{color:var(--color-text-secondary);}
+.barafah{background:#E1F5EE;border:0.5px solid #1D9E75;}
+.banner i{font-size:17px;flex-shrink:0;margin-top:2px;}
+.banner p{font-size:13px;line-height:1.6;}
+
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border:0.5px solid var(--color-border-tertiary);border-radius:8px;overflow:hidden;margin-bottom:1.25rem;}
+.tb{padding:10px 4px;border:none;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;cursor:pointer;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;align-items:center;gap:3px;transition:background 0.15s;}
+.tb:last-child{border-right:none;}
+.tb.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;}
+.tb i{font-size:16px;}
+
+.prog-row{display:flex;justify-content:space-between;margin-bottom:5px;}
+.prog-lbl{font-size:12px;color:var(--color-text-secondary);}
+.prog-wrap{background:var(--color-background-secondary);border-radius:99px;height:4px;margin-bottom:1.25rem;overflow:hidden;}
+.prog-bar{height:4px;border-radius:99px;background:#7F77DD;transition:width 0.3s;}
+
+.sc{display:none;}
+.sc.active{display:block;}
+
+.grp{margin-bottom:1.25rem;}
+.glbl{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:7px;padding:0 2px;}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;transition:background 0.1s;margin-bottom:3px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);width:100%;}
+.ci:hover{background:var(--color-background-secondary);}
+.ci.done{opacity:0.45;}
+.ci input[type=checkbox]{margin-top:2px;accent-color:#7F77DD;width:15px;height:15px;flex-shrink:0;cursor:pointer;}
+.ci label{font-size:14px;color:var(--color-text-primary);cursor:pointer;line-height:1.5;flex:1;}
+.ci.done label{text-decoration:line-through;color:var(--color-text-secondary);}
+.ci .note{font-size:12px;color:var(--color-text-secondary);display:block;margin-top:2px;}
+.bdg{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;}
+.bs{background:#FAEEDA;color:#633806;}
+.bn{background:#EEEDFE;color:#3C3489;}
+.bsp{background:#FAECE7;color:#712B13;}
+
+.time-chip{display:inline-block;font-size:10px;font-weight:500;color:#3C3489;background:#EEEDFE;border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:middle;}
+
+.dua-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;margin-bottom:9px;overflow:hidden;}
+.dua-hdr{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.dua-hdr:hover{background:var(--color-background-secondary);}
+.dua-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1;}
+.dua-sub{font-size:12px;color:var(--color-text-secondary);}
+.dua-body{border-top:0.5px solid var(--color-border-tertiary);padding:10px 16px;display:none;}
+.dua-body.open{display:block;}
+.dua-item{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+.dua-item:last-child{border-bottom:none;}
+.dua-item input{margin-top:3px;accent-color:#1D9E75;flex-shrink:0;}
+.dua-item label{font-size:13px;color:var(--color-text-primary);line-height:1.5;cursor:pointer;flex:1;}
+.dua-item.done label{text-decoration:line-through;color:var(--color-text-secondary);}
+.chev{transition:transform 0.2s;font-size:14px;color:var(--color-text-secondary);}
+.chev.open{transform:rotate(180deg);}
+
+.info-box{background:var(--color-background-secondary);border-radius:8px;padding:11px 15px;margin-bottom:1rem;font-size:13px;color:var(--color-text-secondary);line-height:1.6;}
+</style>
+
+<div class="app">
+<div class="hdr">
+  <h1>The blessed ten — عشر ذي الحجة</h1>
+  <p>Mon 18 May — Tue 26 May 2026 &nbsp;·&nbsp; Day 9 = يوم عرفة</p>
+</div>
+
+<div class="day-nav" id="dayNav"></div>
+<div id="banner"></div>
+
+<div class="tabs">
+  <button class="tb active" onclick="switchSec('day')" id="tab-day"><i class="ti ti-sun" aria-hidden="true"></i>Daytime</button>
+  <button class="tb" onclick="switchSec('night')" id="tab-night"><i class="ti ti-moon" aria-hidden="true"></i>Night</button>
+  <button class="tb" onclick="switchSec('dhikr')" id="tab-dhikr"><i class="ti ti-repeat" aria-hidden="true"></i>Dhikr</button>
+  <button class="tb" onclick="switchSec('dua')" id="tab-dua"><i class="ti ti-hand-stop" aria-hidden="true"></i>Du'a list</button>
+</div>
+
+<div class="prog-row">
+  <span class="prog-lbl">Daily progress</span>
+  <span class="prog-lbl" id="progTxt">0 / 0 done</span>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+
+<div class="sc active" id="sec-day"></div>
+<div class="sc" id="sec-night"></div>
+<div class="sc" id="sec-dhikr"></div>
+<div class="sc" id="sec-dua"></div>
+</div>
+
+<script>
+const DAYS=[
+  {n:1,date:'Mon 18',lbl:'Day 1',fast:true},
+  {n:2,date:'Tue 19',lbl:'Day 2',fast:true},
+  {n:3,date:'Wed 20',lbl:'Day 3',fast:true},
+  {n:4,date:'Thu 21',lbl:'Day 4',fast:false,note:'uni starts'},
+  {n:5,date:'Fri 22',lbl:'Day 5',fast:false},
+  {n:6,date:'Sat 23',lbl:'Day 6',fast:false},
+  {n:7,date:'Sun 24',lbl:'Day 7',fast:false},
+  {n:8,date:'Mon 25',lbl:'Day 8',fast:false},
+  {n:9,date:'Tue 26',lbl:'عرفة',fast:true,arafah:true},
+];
+
+const DAY_ITEMS={
+  'After Fajr':[
+    {id:'morn_adhkar',t:'Morning adhkar — Hisnul Muslim',note:'Start your day with the remembrance of Allah and His words',b:'s'},
+    {id:'quran_fajr',t:'Read a portion of Quran after Fajr',b:'s'},
+  ],
+  'Duha time — after sunrise before Dhuhr':[
+    {id:'duha',t:'Pray Duha — minimum 2 rakaat',note:'Time starts ~15 mins after sunrise until just before Dhuhr',b:'s'},
+  ],
+  'Fard prayers — all five':[
+    {id:'fajr',t:'Fajr on time'},
+    {id:'dhuhr',t:'Dhuhr on time'},
+    {id:'asr',t:'Asr on time'},
+    {id:'maghrib',t:'Maghrib on time'},
+    {id:'isha',t:'Isha on time'},
+  ],
+  'After every prayer':[
+    {id:'rawatib',t:'Sunnah rawatib prayers (before/after fard)',b:'s'},
+    {id:'tasbih_after',t:'Tasbih after every prayer — SubhanAllah 33, Alhamdulillah 33, Allahu Akbar 34',b:'s'},
+    {id:'tahleel_after',t:'Tahleel and istighfar after every prayer',b:'s'},
+  ],
+  'Asr time — window of answered du\'a':[
+    {id:'dua_asr',t:'Make du\'a between Asr and Maghrib',note:'This is a prime time for answered du\'a — ask for everything',b:'sp'},
+  ],
+  'Before Maghrib':[
+    {id:'sadaqah',t:'Give sadaqah — even a tiny amount',note:'Sadaqah extinguishes the Lord\'s anger and increases rizq',b:'s'},
+  ],
+  'Throughout the day':[
+    {id:'takbeer',t:'Say Takbeer aloud — Allahu Akbar',note:'Especially in public — it is a sunnah of these days',b:'sp'},
+    {id:'tongue',t:'Guard your tongue — no backbiting, lying, or idle talk'},
+    {id:'intention',t:'Renew your niyyah (intention) before every good deed'},
+    {id:'parents',t:'Honour or call your parents',b:'s'},
+    {id:'nosins',t:'Actively avoid sins — these days are too precious to waste'},
+  ],
+  'Before sleep':[
+    {id:'eve_adhkar',t:'Evening adhkar — Hisnul Muslim',note:'End your day with the remembrance of Allah and seeking forgiveness',b:'s'},
+    {id:'sleep_sunnah',t:'Sleep sunnah: wudu + Ayat al-Kursi + Surah Al-Mulk',b:'s'},
+    {id:'niyyah_sleep',t:'Set niyyah for tomorrow\'s worship before you sleep'},
+  ],
+};
+
+const NIGHT_ITEMS={
+  'Qiyam al-layl — 11 rakaat':[
+    {id:'qiyam_wake',t:'Wake up in the last third of the night',b:'n'},
+    {id:'qiyam_8',t:'Pray 8 rakaat Qiyam — in pairs of 2 rakaat each',b:'n'},
+    {id:'shaf',t:'Pray 2 rakaat Shaf',b:'n'},
+    {id:'witr',t:'Pray 1 rakaat Witr — total 11 rakaat',b:'n'},
+    {id:'sujood_dua',t:'Make long sincere du\'a in every sujood',b:'n'},
+  ],
+  'Night worship':[
+    {id:'quran_night',t:'Read Quran at night — even 10 minutes',b:'n'},
+    {id:'istighfar_night',t:'Seek forgiveness before sleeping — Astaghfirullah',b:'s'},
+  ],
+  'Arafah night — special':[
+    {id:'arafah_night_long',t:'Spend as much of the night in worship as possible',b:'sp'},
+    {id:'arafah_night_dua',t:'Make du\'a throughout the night — the night of Arafah is immense',b:'sp'},
+  ],
+};
+
+const DHIKR_ITEMS=[
+  {id:'sub33',t:'SubhanAllah 33 times'},
+  {id:'al33',t:'Alhamdulillah 33 times'},
+  {id:'ak34',t:'Allahu Akbar 34 times — completes 100'},
+  {id:'ist100',t:'Astaghfirullah 100 times'},
+  {id:'salawat100',t:'Salawat on the Prophet 100 times — Allahumma salli ala Muhammad'},
+  {id:'tahleel',t:'La ilaha illallah — repeat throughout the day',b:'sp'},
+  {id:'hasbunallah',t:'Hasbunallahu wa ni\'mal wakeel — repeat when worried'},
+  {id:'takbeer_dhikr',t:'Allahu Akbar, Allahu Akbar, La ilaha illallah, Allahu Akbar wa lillahil hamd — say aloud',b:'sp'},
+  {id:'arafah_best_dua',t:'Best du\'a of Arafah: La ilaha illallah wahdahu la sharika lah, lahul mulku wa lahul hamd, wa huwa ala kulli shay\'in qadeer',b:'sp'},
+];
+
+const DUA_CATS=[
+  {id:'self',icon:'ti-user',title:'For yourself',items:[
+    'Complete forgiveness of all sins — past and future',
+    'Guidance and firmness on the straight path always',
+    'Good health, strength, and afiyah (wellness in body and soul)',
+    'Strong, consistent, and increasing iman',
+    'A heart that is content, at peace, and free from envy',
+    'Protection from anxiety, depression, and sadness',
+    'Ease and barakah in your studies and university',
+    'Tawfeeq to do good deeds consistently after these blessed days',
+    'A productive and blessed summer semester',
+    'Entry into Jannah al-Firdaws without account',
+  ]},
+  {id:'family',icon:'ti-heart',title:'For your family',items:[
+    'Health, long life, and afiyah for your parents',
+    'Forgiveness and immense mercy for your parents',
+    'Guidance and righteous hearts for all family members',
+    'Peace, love, and barakah in your home',
+    'Protection from harm and the evil eye',
+    'Ease in any family difficulties or hardships',
+    'Abundant halal rizq and sufficiency for your household',
+    'Righteous spouses and offspring for all',
+  ]},
+  {id:'rizq',icon:'ti-coin',title:'Rizq and provision',items:[
+    'Halal, abundant rizq with barakah in every dirham',
+    'Freedom from debt and financial stress',
+    'A fulfilling and halal career after graduation',
+    'Sufficiency — not too little and not in excess',
+    'Barakah in whatever you earn, spend, and save',
+    'Protection from depending on anyone but Allah',
+  ]},
+  {id:'deen',icon:'ti-book',title:'Deen and akhirah',items:[
+    'Consistency in Quran recitation and deep understanding',
+    'A good and easy death while holding on to iman',
+    'Protection from the punishment of the grave',
+    'The company of the Prophet in Jannah',
+    'Forgiveness for all Muslims — alive and deceased',
+    'Firmness on this deen until your very last breath',
+    'Protection from the fitnah of Dajjal',
+  ]},
+  {id:'ummah',icon:'ti-world',title:'For the ummah and world',items:[
+    'Relief and victory for oppressed Muslims everywhere',
+    'Ease for those suffering in Gaza, Sudan, and beyond',
+    'Guidance for those who are lost or misguided',
+    'Unity and love among Muslims worldwide',
+    'Good and just leaders for Muslim nations',
+    'Healing and peace for our ummah globally',
+  ]},
+  {id:'personal',icon:'ti-star',title:'Your personal wishes',items:[
+    'Write your own specific du\'a — be detailed and bold',
+    'Ask for exactly what your heart wants, no matter how big',
+    'Ask for something you have been afraid to ask for',
+    'Make a du\'a for someone who has hurt you',
+    'Ask Allah for sincerity (ikhlas) in all your deeds',
+  ]},
+];
+
+let day=1,sec='day',S={};
+const ck=(d,id)=>!!S[`${d}_${id}`];
+const tog=(d,id,e)=>{if(e)e.stopPropagation();S[`${d}_${id}`]=!S[`${d}_${id}`];renderAll();};
+
+function renderDays(){
+  document.getElementById('dayNav').innerHTML=DAYS.map(d=>`
+    <button class="db${d.arafah?' arafah':''}${d.n===day?' active':''}" onclick="selDay(${d.n})">
+      <span class="dn">${d.n}</span>
+      <span class="dl">${d.lbl}</span>
+      <span class="dd">${d.date}</span>
+    </button>`).join('');
+}
+
+function renderBanner(){
+  const d=DAYS[day-1];
+  let c,icon,msg;
+  if(d.arafah){
+    c='barafah';icon='ti-moon-stars';
+    msg='<strong>Yawm Arafah — the greatest day of the year.</strong> Fasting today expiates two years of sins. Allah descends and boasts of His servants to the angels. Make as much du\'a as possible today.';
+  } else if(d.fast){
+    c='bfast';icon='ti-droplet';
+    msg='Fasting is recommended today. The Prophet encouraged fasting the first 9 days of Dhul Hijjah. You are fasting today.';
+  } else {
+    c='bnofast';icon='ti-info-circle';
+    msg=`No fast today — that is completely fine. Every deed is multiplied in these days. Focus on dhikr, Quran, and good deeds.${d.note?' ('+d.note+')':''}`;
+  }
+  document.getElementById('banner').innerHTML=`<div class="banner ${c}"><i class="ti ${icon}" aria-hidden="true"></i><p>${msg}</p></div>`;
+}
+
+function buildGroups(groups){
+  const isArafah=day===9;
+  let html='';
+  for(const [grp,items] of Object.entries(groups)){
+    if(grp==='Arafah night — special'&&!isArafah)continue;
+    html+=`<div class="grp"><div class="glbl">${grp}</div>`;
+    for(const it of items){
+      const checked=ck(day,it.id);
+      const badge=it.b?`<span class="bdg ${it.b==='s'?'bs':it.b==='n'?'bn':'bsp'}">${it.b==='s'?'sunnah':it.b==='n'?'night':'special'}</span>`:'';
+      const noteHtml=it.note?`<span class="note">${it.note}</span>`:'';
+      html+=`<div class="ci${checked?' done':''}" onclick="tog(${day},'${it.id}')">
+        <input type="checkbox"${checked?' checked':''} onclick="tog(${day},'${it.id}',event)">
+        <label>${it.t}${badge}${noteHtml}</label></div>`;
+    }
+    html+=`</div>`;
+  }
+  return html;
+}
+
+function buildDhikr(){
+  let html=`<div class="grp"><div class="glbl">Daily dhikr counts</div>`;
+  for(const it of DHIKR_ITEMS){
+    const checked=ck(day,it.id);
+    const badge=it.b?`<span class="bdg bsp">special</span>`:'';
+    html+=`<div class="ci${checked?' done':''}" onclick="tog(${day},'${it.id}')">
+      <input type="checkbox"${checked?' checked':''} onclick="tog(${day},'${it.id}',event)">
+      <label>${it.t}${badge}</label></div>`;
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function buildDua(){
+  let html=`<div class="info-box">Prepare your du'a list before Arafah. Expand each category, tick what you plan to include, and come to Arafah prepared. Be specific — Allah loves detailed and sincere du'a.</div>`;
+  for(const cat of DUA_CATS){
+    const isOpen=!!S['duo_'+cat.id];
+    const done=cat.items.filter((_,i)=>!!S[`dua_${cat.id}_${i}`]).length;
+    html+=`<div class="dua-card">
+      <div class="dua-hdr" onclick="togDuaCat('${cat.id}')">
+        <i class="ti ${cat.icon}" style="font-size:18px;color:var(--color-text-secondary);" aria-hidden="true"></i>
+        <span class="dua-title">${cat.title}</span>
+        <span class="dua-sub">${done}/${cat.items.length}</span>
+        <i class="ti ti-chevron-down chev${isOpen?' open':''}" aria-hidden="true"></i>
+      </div>
+      <div class="dua-body${isOpen?' open':''}">
+        ${cat.items.map((item,i)=>{
+          const checked=!!S[`dua_${cat.id}_${i}`];
+          return `<div class="dua-item${checked?' done':''}" onclick="togDuaItem('${cat.id}',${i})">
+            <input type="checkbox"${checked?' checked':''} onclick="event.stopPropagation();togDuaItem('${cat.id}',${i})">
+            <label>${item}</label></div>`;
+        }).join('')}
+      </div></div>`;
+  }
+  return html;
+}
+
+function togDuaCat(id){S['duo_'+id]=!S['duo_'+id];renderAll();}
+function togDuaItem(catId,i){const k=`dua_${catId}_${i}`;S[k]=!S[k];renderAll();}
+
+function updateProgress(){
+  const allItems=[
+    ...Object.values(DAY_ITEMS).flat(),
+    ...Object.values(NIGHT_ITEMS).flat().filter(it=>!it.id.startsWith('arafah')||day===9),
+    ...DHIKR_ITEMS,
+  ];
+  const total=allItems.length;
+  const done=allItems.filter(it=>ck(day,it.id)).length;
+  document.getElementById('progTxt').textContent=`${done} / ${total} done`;
+  document.getElementById('progBar').style.width=total>0?Math.round(done/total*100)+'%':'0%';
+}
+
+function renderAll(){
+  renderDays();renderBanner();
+  document.getElementById('sec-day').innerHTML=buildGroups(DAY_ITEMS);
+  document.getElementById('sec-night').innerHTML=buildGroups(NIGHT_ITEMS);
+  document.getElementById('sec-dhikr').innerHTML=buildDhikr();
+  document.getElementById('sec-dua').innerHTML=buildDua();
+  updateProgress();
+  ['day','night','dhikr','dua'].forEach(s=>{
+    document.getElementById('sec-'+s).classList.toggle('active',s===sec);
+    document.getElementById('tab-'+s).classList.toggle('active',s===sec);
+  });
+}
+
+function selDay(n){day=n;renderAll();}
+function switchSec(s){sec=s;renderAll();}
+renderAll();
+</script>
